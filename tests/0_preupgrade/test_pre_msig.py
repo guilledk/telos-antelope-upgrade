@@ -10,7 +10,7 @@ def test_multi_sig_contract(msig_contract):
 
     owner_perms = [f'{name}@active' for name in (a, b)]
     owner_perms.sort()
-    
+
     proposal = cleos.multi_sig_propose(
         a,
         owner_perms,
@@ -39,7 +39,7 @@ def test_multi_sig_contract(msig_contract):
         'eosio@active'
     )
     assert ec == 0
-   
+
     conf = cleos.get_table(
         'testcontract',
         'testcontract',
@@ -54,7 +54,7 @@ def test_multi_sig_contract(msig_contract):
         f'{a}@active'
     )
     assert ec == 0
-   
+
     conf = cleos.get_table(
         'testcontract',
         'testcontract',
@@ -82,7 +82,7 @@ def test_multi_sig_transaction_ok(msig_contract):
     spay_amount = f'{second_amount}.00'
 
     total_pay = f'{first_amount + second_amount}.00 {symbol}'
-    
+
     ec, _ = cleos.create_token(issuer, max_supply)
     assert ec == 0
 
@@ -131,10 +131,14 @@ def test_multi_sig_transaction_ok(msig_contract):
 
 def test_multi_sig_transaction_error(msig_contract):
     cleos = msig_contract
-    issuer, worker = (
-        cleos.new_account()
-        for _ in range(2)
-    )
+
+    issuer = cleos.new_account()
+
+    worker_creator = cleos.new_account()
+    ec, _ = cleos.give_token(worker_creator, '60.0000 TLOS')
+    assert ec == 0
+    worker = cleos.new_account(owner=worker_creator)
+
 
     symbol = random_token_symbol()
     amount = '1000.00'
@@ -170,7 +174,7 @@ def test_multi_sig_transaction_error(msig_contract):
             'memo': 'multi payment'
         }
     )
-    
+
     ec, out = cleos.multi_sig_exec(
         worker,
         proposal,

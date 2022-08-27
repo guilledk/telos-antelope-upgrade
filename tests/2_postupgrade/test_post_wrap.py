@@ -16,7 +16,8 @@ def test_wrap_exec_direct(cleos):
         'transfer',
         ['eosio', worker, quantity, ''],
         'eosio@active',
-        dump_tx=True
+        dump_tx=True,
+        sign=False
     )
     assert ec == 0
 
@@ -24,23 +25,17 @@ def test_wrap_exec_direct(cleos):
     tx['ref_block_prefix'] = 0
     tx['context_free_actions'] = []
 
-    ec, tx = cleos.wrap_exec('eosio.wrap', tx, dump_tx=True)
+    ec, tx = cleos.wrap_exec(
+        'eosio.wrap',
+        tx,
+        dump_tx=True,
+        sign=False
+    )
     assert ec == 0
 
     tx['ref_block_num'] = 0
     tx['ref_block_prefix'] = 0
     tx['context_free_actions'] = []
-
-    # ec, tx_ws = cleos.sign_transaction(
-    #     cleos.keys[worker], tx)
-    # assert ec == 0
-
-    # ec, tx = cleos.sign_transaction(
-    #     cleos.keys['eosio.wrap'], tx)
-    # assert ec == 0
-
-    # tx['signatures'] += tx_ws['signatures']
-    # tx['signatures'] += tx_es['signatures']
 
     ec, out = cleos.push_transaction(tx)
     cleos.logger.info(out)
