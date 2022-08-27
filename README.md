@@ -2,7 +2,12 @@
 
 ### CI tests to perform telos+antelope upgrade
 
-Contracts used:
+    - Deploy old contracts to a local chain running leap-3.1.0
+    - Run a bunch of msig, token and wrap exec tests
+    - Upgrade system contracts to new version
+    - Re-run tests and check we get same resutlts
+
+### Contracts used:
 
             contract - branch - cdt
 
@@ -20,4 +25,4 @@ Contracts used:
         - eosio.token  - telos-specific - v3.0.0-rc2
         - eosio.wrap   - telos-specific - v3.0.0-rc2
 
-Check the `tests/` directory.
+Checkout the `tests/` directory.
